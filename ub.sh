@@ -48,7 +48,7 @@ sudo apt install sshpass -y
 sudo apt install isc-dhcp-server -y
 sudo apt install -yy iptables-persistent
 sudo apt install python3-pip -y
-sudo pip install paramiko -y
+sudo pip install paramiko
 
 #Konfigurasi Pada Netplan
 echo "Mengkonfigurasi netplan..."
