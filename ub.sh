@@ -46,7 +46,9 @@ EOF
 sudo apt update
 sudo apt install sshpass -y
 sudo apt install isc-dhcp-server -y
-sudo apt install iptables-persistent -y
+sudo apt install -yy iptables-persistent
+sudo apt install python3-pip -y
+sudo pip install paramiko -y
 
 #Konfigurasi Pada Netplan
 echo "Mengkonfigurasi netplan..."
@@ -104,23 +106,73 @@ sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 # Akhir Confi DHCP SERVER
 
 #Konfigurasi Cisco
-echo "Mengkonfigurasi Cisco Mohon Tunggu"
-#  Konfigurasi Cisco Switch melalui SSH dengan username dan password root
-echo "Mengonfigurasi Cisco Switch..."
-sudo sshpass -p "$PASSC" ssh -t -o StrictHostKeyChecking=no -p "22" $USERC@$IPC <<EOF
-enable
-configure terminal
-interface e0/1
-no shutdown
-switchport mode access
-switchport access vlan $VLAN_ID
-exit
-interface e0/0
-no shutdown
-switchport trunk encapsulation dot1q
-switchport mode trunk
-end
-write memory
-EOF
+# echo "Mengkonfigurasi Cisco Mohon Tunggu"
+# #  Konfigurasi Cisco Switch melalui SSH dengan username dan password root
+# echo "Mengonfigurasi Cisco Switch..."
+# sudo sshpass -p "$PASSC" ssh -t -o StrictHostKeyChecking=no -p "22" $USERC@$IPC <<EOF
+# enable
+# configure terminal
+# interface e0/1
+# no shutdown
+# switchport mode access
+# switchport access vlan $VLAN_ID
+# exit
+# interface e0/0
+# no shutdown
+# switchport trunk encapsulation dot1q
+# switchport mode trunk
+# end
+# write memory
+# EOF
+
+python3 cisco.py
 
 echo "Otomasi konfigurasi selesai."
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Konfig Screen
+#sudo apt install screen
+#sudo screen /dev/tty*(ttyS0) 9600
+#Ctrl A K
+
+#Konfig Awal Cisco Switch IoL 2
+# en
+# conf t
+# hostname CiscoSW
+# int vl 1
+# no sh
+# ip add 192.168.1.1 255.255.255.0
+# line vty 0 4
+# login local
+# transport input ssh
+# exit
+
+#Konfig Awal Mikrotik
+# /system identity set name=MikroTik1
+# /ip address add address=192.168.17.100/24 interface=ether1
+# /ip service enable ssh
