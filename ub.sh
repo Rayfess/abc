@@ -108,7 +108,7 @@ echo "Mengkonfigurasi Cisco Mohon Tunggu"
 sudo ufw allow out to 192.168.1.254 port 22
 #  Konfigurasi Cisco Switch melalui SSH dengan username dan password root
 echo "Mengonfigurasi Cisco Switch..."
-sudo sshpass -p "$PASSC" ssh -o StrictHostKeyChecking=no -p "22" $USERC@$IPC <<EOF
+sudo sshpass -p "$PASSC" ssh -t -o StrictHostKeyChecking=no -p "22" $USERC@$IPC <<EOF
 enable
 configure terminal
 interface e0/1
