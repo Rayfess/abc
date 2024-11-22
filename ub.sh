@@ -59,6 +59,7 @@ network:
       dhcp4: true
     eth1:
       dhcp4: no
+      addresses: [$IPU$IP_Pref]
   vlans:
      eth1.10:
        id: 10
@@ -122,10 +123,5 @@ switchport mode trunk
 end
 write memory
 EOF
-
-
-# Konfigurasi Routing di Ubuntu Server
-# echo "Menambahkan konfigurasi routing..."
-# ip route add $IPROUTE_ADD via $MIKROTIK_IP
 
 echo "Otomasi konfigurasi selesai."
