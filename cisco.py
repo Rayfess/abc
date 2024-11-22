@@ -2,7 +2,7 @@ import paramiko
 import time
 
 # Setup koneksi SSH
-hostname = '192.168.1.254'  # Ganti dengan IP Cisco IOL switch Anda
+hostname = '192.168.17.1'  # Ganti dengan IP Cisco IOL switch Anda
 port = 22  # Port SSH default
 username = 'admin'  # Username yang telah Anda buat di perangkat
 password = 'cisco'  # Password yang telah Anda buat di perangkat
