@@ -105,7 +105,6 @@ sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 
 #Konfigurasi Cisco
 echo "Mengkonfigurasi Cisco Mohon Tunggu"
-sudo ufw allow out to 192.168.1.254 port 22
 #  Konfigurasi Cisco Switch melalui SSH dengan username dan password root
 echo "Mengonfigurasi Cisco Switch..."
 sudo sshpass -p "$PASSC" ssh -t -o StrictHostKeyChecking=no -p "22" $USERC@$IPC <<EOF
