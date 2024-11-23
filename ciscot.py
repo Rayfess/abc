@@ -7,9 +7,9 @@ IP = "192.168.74.128"  # Ganti dengan alamat IP switch Anda
 PORT = 30026          # Port default untuk Telnet
 
 # Fungsi untuk menghubungkan ke switch
-def connect_to_switch(ip, port):
+def connect_to_switch(IP, PORT):
     # Membuat koneksi Telnet
-    tn = telnetlib.Telnet(ip, port)
+    tn = telnetlib.Telnet(IP, PORT)
     return tn
 
 # Fungsi untuk mengirimkan perintah ke switch
