@@ -1,5 +1,6 @@
-import telnetlib
+import os
 import time
+import telnetlib
 
 # Variabel untuk IP dan port switch
 IP = "192.168.74.128"  # Ganti dengan alamat IP switch Anda
