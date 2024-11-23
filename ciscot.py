@@ -1,5 +1,6 @@
 import os
 import time
+from telnetlib import Telnet
 import telnetlib
 
 # Variabel untuk IP dan port switch
