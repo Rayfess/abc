@@ -1,5 +1,4 @@
 import paramiko
-import time
 
 # Setup koneksi SSH
 hostname = '192.168.17.1'  # Ganti dengan IP Cisco IOL switch Anda
@@ -9,42 +8,42 @@ password = 'cisco'  # Password yang telah Anda buat di perangkat
 
 # Membuat SSH client
 client = paramiko.SSHClient()
-
-# Menambahkan host ke known hosts (jika belum ada)
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+def send_command(ssh_shell, command):
+    """Mengirim perintah ke shell SSH dan mengembalikan output."""
+    ssh_shell.send(command + '\n')
+    # Tunggu hingga ada data yang tersedia untuk dibaca
+    while not ssh_shell.recv_ready():
+        pass
+    output = ssh_shell.recv(5000).decode('utf-8')
+    return output
 
 try:
     # Connect ke perangkat
     print(f"Connecting to {hostname}...")
     client.connect(hostname, port=port, username=username, password=password)
 
-    #Mengambil channel SSH
+    # Mengambil channel SSH
     ssh_shell = client.invoke_shell()
 
-    time.sleep(1)
-
-    #mulai konfigurasi
-    ssh_shell.send('conf t\n')  # Masuk ke mode konfigurasi
-    time.sleep(1)
-    ssh_shell.send('hostname CiscoSW\n')  # Mengubah hostname
-    time.sleep(1)
-    ssh_shell.send('interface vlan 1\n')  # Masuk ke interface VLAN 1
-    time.sleep(1)
-    ssh_shell.send('ip address 192.168.17.1 255.255.255.0\n')  # Menetapkan IP address pada VLAN 1
-    time.sleep(1)
-    ssh_shell.send('no shutdown\n')  # Mengaktifkan interface VLAN 1
-    time.sleep(1)
-    ssh_shell.send('exit\n')  # Keluar dari konfigurasi interface
-    time.sleep(1)
-    ssh_shell.send('exit\n')  # Keluar dari mode konfigurasi
-    time.sleep(1)
+    # Mulai konfigurasi
+    print(send_command(ssh_shell, 'conf t'))  # Masuk ke mode konfigurasi
+    print(send_command(ssh_shell, 'hostname CiscoSW'))  # Mengubah hostname
+    print(send_command(ssh_shell, 'interface vlan 1'))  # Masuk ke interface VLAN 1
+    print(send_command(ssh_shell, 'ip address 192.168.17.1 255.255.255.0'))  # Menetapkan IP address pada VLAN 1
+    print(send_command(ssh_shell, 'no shutdown'))  # Mengaktifkan interface VLAN 1
+    print(send_command(ssh_shell, 'exit'))  # Keluar dari konfigurasi interface
+    print(send_command(ssh_shell, 'exit'))  # Keluar dari mode konfigurasi
 
     # Menjalankan perintah untuk melihat konfigurasi yang telah diterapkan
-    ssh_shell.send('show running-config\n')
-    time.sleep(2)
-    output = ssh_shell.recv(5000).decode('utf-8')  # Menangkap output dari perintah
+    output = send_command(ssh_shell, 'show running-config')
     print(output)
 
+except paramiko.SSHException as e:
+    print(f"SSH connection error: {e}")
+except Exception as e:
+    print(f"An error occurred: {e}")
 finally:
     # Menutup koneksi SSH
     print("Closing the connection...")
