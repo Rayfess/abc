@@ -6,7 +6,7 @@ PORT = 30026
 VLAN_ID = "10"       # Ganti dengan VLAN ID yang sesuai
 
 # Membuat koneksi Telnet
-tn = telnetlib.Telnet(IP, PORT)
+tn = telnetlib.Telnet(IP, PORT, 10)
 
 # Masuk ke mode enable
 tn.write(b"enable\n")
