@@ -49,6 +49,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt install -y iptables-persistent
 sudo apt install python3 python3-pip -y
 pip3 install netifaces
 sudo ufw allow $SPORT/tcp
+sudo ufw allow from $IPNET to any port $SPORT
 
 #Konfigurasi Pada Netplan
 echo "Mengkonfigurasi netplan..."
