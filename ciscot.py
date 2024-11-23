@@ -1,55 +1,39 @@
-import os
-import time
-from telnetlib import Telnet
-import telnetlib
+from netmiko import ConnectHandler
 
-# Variabel untuk IP dan port switch
-IP = "192.168.74.128"  # Ganti dengan alamat IP switch Anda
-PORT = 30026          # Port default untuk Telnet
+# Informasi perangkat Cisco IOL menggunakan Telnet
+device = {
+    'device_type': 'cisco_ios_telnet',  # Menandakan menggunakan Telnet
+    'host': '192.168.74.128',              # IP perangkat Cisco IOL Anda
+    'username': 'admin',                # Username untuk login
+    'password': 'password',             # Password untuk login
+    'secret': 'enable_password',        # Password untuk enable mode
+    'port': 30026,                         # Port Telnet, default adalah 23
+}
 
-# Fungsi untuk menghubungkan ke switch
-def connect_to_switch(IP, PORT):
-    # Membuat koneksi Telnet
-    tn = telnetlib.Telnet(IP, PORT)
-    return tn
+# Membuat koneksi menggunakan Netmiko
+try:
+    with ConnectHandler(**device) as net_connect:
+        # Masuk ke enable mode
+        net_connect.enable()
 
-# Fungsi untuk mengirimkan perintah ke switch
-def send_command(tn, command):
-    tn.write(command.encode('ascii') + b"\n")
-    time.sleep(1)  # Tunggu sebentar untuk memastikan perintah diproses
+        # Menyiapkan konfigurasi interface
+        config_commands = [
+            'en'
+            'conf t'
+            'int e0/0',   # Pilih interface yang akan dikonfigurasi
+            'description "Connected to Server"',
+            'no shutdown',                      # Mengaktifkan interface
+            'ip address 192.168.17.1 255.255.255.0'  # Mengonfigurasi IP address
+        ]
+        
+        # Mengirimkan perintah konfigurasi ke perangkat
+        output = net_connect.send_config_set(config_commands)
 
-# Fungsi untuk mengkonfigurasi switch
-def configure_switch(tn):
-    send_command(tn, b"enable")
-    send_command(tn, b"configure terminal")
+        # Menampilkan output konfigurasi
+        print(output)
 
-    # Konfigurasi interface e0/1
-    send_command(tn, b"interface e0/1")
-    send_command(tn, b"no shutdown")  # Mengaktifkan interface
-    send_command(tn, b"switchport mode access")  # Mengatur mode akses
-    send_command(tn, b"switchport access vlan 10")  # Mengatur VLAN
-    send_command(tn, b"exit")  # Kembali ke mode konfigurasi
+        # Menyimpan konfigurasi ke startup-config
+        net_connect.save_config()
 
-    # Konfigurasi interface e0/0
-    send_command(tn, b"interface e0/0")
-    send_command(tn, b"no shutdown")  # Mengaktifkan interface
-    send_command(tn, b"switchport trunk encapsulation dot1q")  # Mengatur encapsulation trunk
-    send_command(tn, b"switchport mode trunk")  # Mengatur mode trunk
-    send_command(tn, b"exit")  # Kembali ke mode konfigurasi
-
-    # Keluar dari mode konfigurasi
-    send_command(tn, b"end")
-    send_command(tn, b"write memory")  # Menyimpan konfigurasi
-    send_command(tn, b"exit")  # Keluar dari sesi
-
-# Main script
-if __name__ == "__main__":
-    # Menghubungkan ke switch
-    tn = connect_to_switch(IP, PORT)
-    
-    # Mengkonfigurasi switch
-    configure_switch(tn)
-
-    # Menutup koneksi
-    tn.close()
-    print("Konfigurasi switch selesai.")
+except Exception as e:
+    print(f"Terjadi kesalahan saat mencoba menghubungkan ke perangkat: {e}")

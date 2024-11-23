@@ -48,6 +48,7 @@ sudo apt install isc-dhcp-server -y
 sudo DEBIAN_FRONTEND=noninteractive apt install -y iptables-persistent
 sudo apt install python3 python3-pip -y
 pip3 install netifaces
+pip3 install netmiko
 sudo ufw allow $SPORT/tcp
 sudo ufw allow from $IPNET to any port $SPORT
 sudo ufw reload
