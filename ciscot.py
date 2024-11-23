@@ -8,6 +8,7 @@ device = {
     'password': 'password',             # Password untuk login
     'secret': 'enable_password',        # Password untuk enable mode
     'port': 30026,                         # Port Telnet, default adalah 23
+    'timeout': 10,
 }
 
 # Membuat koneksi menggunakan Netmiko
