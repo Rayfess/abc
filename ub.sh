@@ -7,14 +7,13 @@ DHCP_CONF="/etc/dhcp/dhcpd.conf" #Tempat Konfigurasi DHCP
 NETPLAN_CONF="/etc/netplan/01-netcfg.yaml" # Tempat Konfigurasi Netplan
 DDHCP_CONF="/etc/default/isc-dhcp-server" #Tempat konfigurasi default DHCP
 IPROUTE_ADD="192.168.200.1/24"
-USERC="cisco"
-PASSC="cisco"
-USERM="admin"
 
 #ip default perangkat
 IPMIK="192.168.88.1"
 IPC="192.168.1.254"
 IPU="192.168.17.1"
+IPNET="192.168.74.128"
+SPORT="30026"
 
 
 # Konfigurasi Untuk Seleksi Tiap IP
@@ -103,29 +102,7 @@ sudo sysctl -w net.ipv4.ip_forward=1
 echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
 sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 
-# Akhir Confi DHCP SERVER
-
-#Konfigurasi Cisco
-# echo "Mengkonfigurasi Cisco Mohon Tunggu"
-# #  Konfigurasi Cisco Switch melalui SSH dengan username dan password root
-# echo "Mengonfigurasi Cisco Switch..."
-# sudo sshpass -p "$PASSC" ssh -t -o StrictHostKeyChecking=no -p "22" $USERC@$IPC <<EOF
-# enable
-# configure terminal
-# interface e0/1
-# no shutdown
-# switchport mode access
-# switchport access vlan $VLAN_ID
-# exit
-# interface e0/0
-# no shutdown
-# switchport trunk encapsulation dot1q
-# switchport mode trunk
-# end
-# write memory
-# EOF
-
-python3 cisco.py
+python3 ciscot.py
 
 echo "Otomasi konfigurasi selesai."
 
