@@ -47,7 +47,6 @@ sudo apt install sshpass -y
 sudo apt install isc-dhcp-server -y
 sudo DEBIAN_FRONTEND=noninteractive apt install -y iptables-persistent
 sudo apt install python3-pip -y
-sudo pip install telnetlib
 sudo ufw allow $SPORT/tcp
 
 #Konfigurasi Pada Netplan
