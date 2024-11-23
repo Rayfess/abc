@@ -50,6 +50,7 @@ sudo apt install python3 python3-pip -y
 pip3 install netifaces
 sudo ufw allow $SPORT/tcp
 sudo ufw allow from $IPNET to any port $SPORT
+sudo ufw reload
 
 #Konfigurasi Pada Netplan
 echo "Mengkonfigurasi netplan..."
@@ -103,6 +104,7 @@ echo "Mengaktifkan IP forwarding dan mengonfigurasi IPTables..."
 sudo sysctl -w net.ipv4.ip_forward=1
 echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
 sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A OUTPUT -p tcp --dport $SPORT -j ACCEPT
 
 python3 ciscot.py
 
