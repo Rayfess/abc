@@ -48,6 +48,7 @@ sudo apt install isc-dhcp-server -y
 sudo DEBIAN_FRONTEND=noninteractive apt install -y iptables-persistent
 sudo apt install python3-pip -y
 sudo pip install paramiko
+sudo ufw allow $SPORT/tcp
 
 #Konfigurasi Pada Netplan
 echo "Mengkonfigurasi netplan..."
