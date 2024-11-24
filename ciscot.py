@@ -3,11 +3,11 @@ from netmiko import ConnectHandler
 # Informasi perangkat Cisco IOL menggunakan Telnet
 device = {
     'device_type': 'cisco_ios_telnet',  # Menandakan menggunakan Telnet
-    'host': '192.168.74.128',              # IP perangkat Cisco IOL Anda
+    'host': '192.168.74.137',              # IP perangkat Cisco IOL Anda
     'username': 'admin',                # Username untuk login
     'password': 'password',             # Password untuk login
     'secret': 'enable_password',        # Password untuk enable mode
-    'port': 30026,                         # Port Telnet, default adalah 23
+    'port': 30002,                         # Port Telnet, default adalah 23
     'timeout': 10,
 }
 
