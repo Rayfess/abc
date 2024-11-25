@@ -116,6 +116,7 @@ echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
 sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 sudo iptables -A OUTPUT -p tcp --dport $SPORT -j ACCEPT
 
+chmod +x cisco.sh
 bash cisco.sh
 
 # bash mik.sh

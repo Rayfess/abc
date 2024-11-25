@@ -25,8 +25,6 @@ SPORT="30002"
     sleep 1
     echo "exit"
     sleep 1
-    echo "write memory"
-    sleep 1
 } | telnet $IPNET $SPORT
 
 sleep 2
