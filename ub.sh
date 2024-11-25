@@ -3,18 +3,26 @@
 VLAN_INTERFACE="eth1.10"
 VLAN_ID=10
 IP_ADDR="$IP_Router$IP_Pref"      # IP address untuk interface VLAN di Ubuntu
+
+# Destinasi folder
 DHCP_CONF="/etc/dhcp/dhcpd.conf" #Tempat Konfigurasi DHCP
 NETPLAN_CONF="/etc/netplan/01-netcfg.yaml" # Tempat Konfigurasi Netplan
 DDHCP_CONF="/etc/default/isc-dhcp-server" #Tempat konfigurasi default DHCP
-IPROUTE_ADD="192.168.200.1/24"
+
+#Ip PNETLAB
+IPNET="192.168.74.137"
 
 #ip default perangkat
-IPMIK="192.168.88.1"
 IPC="192.168.1.254"
 IPU="192.168.17.1"
-IPNET="192.168.74.128"
-SPORT="30002"
+IPROUTE_ADD="192.168.200.1/24"
 
+#MIKROTIK
+IPMIK="192.168.88.1"
+MPORT="30004"
+
+#CISCO
+SPORT="30002"
 
 # Konfigurasi Untuk Seleksi Tiap IP
 #Konfigurasi IP Range dan IP Yang Anda Inginkan
@@ -43,13 +51,12 @@ deb http://kartolo.sby.datautama.net.id/ubuntu/ focal-proposed main restricted u
 EOF
 
 sudo apt update
-sudo apt install sshpass -y
 sudo apt install isc-dhcp-server -y
 sudo DEBIAN_FRONTEND=noninteractive apt install -y iptables-persistent
-sudo apt install python3 python3-pip -y
-pip3 install netmiko --upgrade netmiko
 sudo ufw allow $SPORT/tcp
+sudo ufw allow $MPORT/tcp
 sudo ufw allow from $IPNET to any port $SPORT
+sudo ufw allow from $IPNET to any port $MPORT
 sudo ufw reload
 
 #Konfigurasi Pada Netplan
@@ -99,6 +106,9 @@ cat <<EOL | sudo tee $DDHCP_CONF
 INTERFACESv4="$VLAN_INTERFACE"
 EOL
 
+echo "Restart DHCP Server..."
+sudo systemctl restart isc-dhcp-server
+
 # Mengaktifkan IP forwarding dan mengonfigurasi IPTables
 echo "Mengaktifkan IP forwarding dan mengonfigurasi IPTables..."
 sudo sysctl -w net.ipv4.ip_forward=1
@@ -106,59 +116,11 @@ echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
 sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 sudo iptables -A OUTPUT -p tcp --dport $SPORT -j ACCEPT
 
-{
-    sleep 1
-    echo "enable"
-    sleep 1
-    echo "configure terminal"
-    sleep 1
-    echo "vlan 10"
-    sleep 1
-    echo " name VLAN10"
-    sleep 1
-    echo "exit"
-    sleep 1
-    echo "vlan 20"
-    sleep 1
-    echo " name VLAN20"
-    sleep 1
-    echo "exit"
-    sleep 1
-    echo "interface FastEthernet0/1"
-    sleep 1
-    echo " switchport mode access"
-    sleep 1
-    echo " switchport access vlan 10"
-    sleep 1
-    echo "exit"
-    sleep 1
-    echo "interface FastEthernet0/2"
-    sleep 1
-    echo " switchport mode access"
-    sleep 1
-    echo " switchport access vlan 20"
-    sleep 1
-    echo "exit"
-    sleep 1
-    echo "write memory"
-    sleep 1
-    echo "disconnect"
-    echo "close"
-} | telnet $IPNET $SPORT
+bash cisco.sh
 
-sleep 2
+# bash mik.sh
 
-# Memastikan script keluar dengan kode status yang benar
-if [ $? -eq 0 ]; then
-    echo "Konfigurasi VLAN dan Interface berhasil diterapkan."
-else
-    echo "Terjadi kesalahan saat menerapkan konfigurasi."
-fi
-
-
-python3 ciscot.py
-
-echo "Otomasi konfigurasi selesai."
+echo "Otomasi selesai."
 
 
 
