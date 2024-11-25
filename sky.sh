@@ -9,31 +9,19 @@ SPORT="30002"
     sleep 1
     echo "configure terminal"
     sleep 1
-    echo "vlan 10"
+    echo "int e0/1"
     sleep 1
-    echo " name VLAN10"
+    echo "sw mo acc"
     sleep 1
-    echo "exit"
-    sleep 1
-    echo "vlan 20"
-    sleep 1
-    echo " name VLAN20"
+    echo "sw acc vl 10"
     sleep 1
     echo "exit"
     sleep 1
-    echo "interface FastEthernet0/1"
+    echo "interface e0/0"
     sleep 1
-    echo " switchport mode access"
+    echo "sw tr encap do"
     sleep 1
-    echo " switchport access vlan 10"
-    sleep 1
-    echo "exit"
-    sleep 1
-    echo "interface FastEthernet0/2"
-    sleep 1
-    echo " switchport mode access"
-    sleep 1
-    echo " switchport access vlan 20"
+    echo "sw mo tr"
     sleep 1
     echo "exit"
     sleep 1
