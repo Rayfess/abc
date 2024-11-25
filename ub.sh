@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Variabel Konfigurasi
 VLAN_INTERFACE="eth1.10"
 VLAN_ID=10
@@ -18,14 +19,14 @@ IPU="192.168.17.1"
 IPROUTE_ADD="192.168.200.1/24"
 
 #MIKROTIK
-IPMIK="192.168.88.1"
+MIKROTIK_IP="192.168.200.1"     # IP MikroTik yang baru
+MIKROTIK_S="192.168.200.0"
 MPORT="30004"
 
 #CISCO
 SPORT="30002"
 
-# Konfigurasi Untuk Seleksi Tiap IP
-#Konfigurasi IP Range dan IP Yang Anda Inginkan
+#Konfigurasi IP Yang Anda Inginkan
 IP_A="17"
 IP_B="200"
 IP_C="2"
@@ -70,7 +71,6 @@ network:
       dhcp4: true
     eth1:
       dhcp4: no
-      addresses: [$IPU$IP_Pref]
   vlans:
      eth1.10:
        id: 10
@@ -116,12 +116,9 @@ echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
 sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 sudo iptables -A OUTPUT -p tcp --dport $SPORT -j ACCEPT
 
-chmod +x cisco.sh
-bash cisco.sh
+sudo ip route add $MIKROTIK_S$IP_Pref via $MIKROTIK_IP
 
-# bash mik.sh
-
-echo "Otomasi selesai."
+echo "Konfigurasi Ubuntu Selesai"
 
 
 
